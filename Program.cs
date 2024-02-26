@@ -44,11 +44,8 @@ void CreateGame()
     Console.WindowWidth = 6 * (Card.renderWidth + 3);
 
 
-    // using this instead of new Card[0]; I'm not even using this?
     Card[] emptyCards = Array.Empty<Card>();
     Card emptyCard = new((Suit)(-1), (Value)(-1), true);
-    //
-    //Stack[] oldStacks = CopyStack(stacks.ToArray());
 
     RenderStacks(stacks);
 
@@ -134,7 +131,6 @@ void CreateGame()
                         break;
                 }
                 waitingForInput = false;
-                //TakeSnapshot(stacks);
             }
         }
 
@@ -155,33 +151,6 @@ void CreateGame()
 
 }
 
-// MoveCards should move one card from one stack to another stack
-// MoveCards needs inputs Stack[]
-//
-// There are 13 stacks
-// Top left: pool stack, empty stack
-// Bottom: first to seventh stack
-// Top right: finish stack for hearts, spades, diamonds, clubs
-
-// pool stack should move to empty stack, if pool stack is not empty else empty stack should move all to pool stack
-// case 0
-//
-// empty stack should move to finish, if card is not empty suit matches and value is one unit bigger e.g. 5Hearts -> 4Hearts
-// case 1
-// empty stack should move to bottom, if card is not empty suit has different color and value is one unit smaller e.g. 5Hearts -> 6Spades or 6Clubs
-// case 2
-//
-// bottom should move to finish, if card is not empty suit matches and value is one unit bigger e.g. 5Hearts -> 4Hearts
-// case 3
-// bottom should move to bottom, if card is not empty suit has different color and value is one unit smaller e.g. 5Hearts -> 6Spades or 6Clubs
-// case 4
-//
-// top should move to bottom, if card is not empty and suit has different color and value is one unit smaller e.g. 5Hearts -> 6Spades or 6Clubs
-// case 5
-//
-// else nothing should move
-// case 6
-
 
 void MoveCardAtTheTop(Stack startStack, Stack targetStack)
 {
@@ -193,9 +162,6 @@ void MoveCardAtTheTop(Stack startStack, Stack targetStack)
     }
     else
     {
-        // stacks switched here
-        // startStack -> targetStack
-        // targetStack -> startStack
         while (targetStack.numberOfCards > 0)
         {
             Card currentCard = targetStack.GetLastCard();
@@ -233,7 +199,6 @@ void MoveCardToFinish(Stack[] stacks, Stack stackToFinish)
             stacks[8 + (int)currentCard.suit].AddCard(currentCard);
         }
     }
-    //    Console.BackgroundColor = ConsoleColor.Black;
 }
 
 void MoveCardToBottom(Stack startStack, Stack targetStack, int pressedNumber)
@@ -291,9 +256,9 @@ int FindIndexForMovingCards(Stack startStack, Stack targetStack)
         return 0;
     }
 
-    // if no cards are facing up, dont iterate
     Card currentCard = startStack.GetLastCard();
 
+    // if no cards are facing up, dont iterate
     if (!currentCard.faceUp)
     {
         return 0;
@@ -308,7 +273,6 @@ int FindIndexForMovingCards(Stack startStack, Stack targetStack)
     while (index <= numberOfCards)
     {
         currentCard = startStack.GetCard(numberOfCards - index);
-        // this works, when i switched cards, but why ?
         if (currentCard.faceUp && IsValidMoveAtBottom(currentCard, targetCard))
         {
             return index;
@@ -401,6 +365,7 @@ bool IsValidMoveAtBottom(Card bottomCard, Card topCard)
     return (false, -100, -100);
 }
 
+// CHANGE: this can be more efficient
 int GetMovingIndex(int firstValue, int secondValue)
 {
     if (firstValue == (int)Inputs.Space)
@@ -510,9 +475,10 @@ void DisplayAllCards(Card[] cards, bool showBoard)
     {
         for (int k = 0; k < 21; k++)
         {
-            //very not nice
+            // very not nice
             // not 1 and not 2 and not 7 8 9 10 11 12 13
             // is -0 3 4 5 6 14+
+            // CHANGE: if this can't be expressed smarter then change these magic numbers into an array
             if (k != 1 && k != 2 && !(k > 6 && k < 14))
             {
                 RenderCard(cards[k], (k % 7) * Card.renderWidth, (k / 7) * Card.renderHeight);
@@ -631,14 +597,10 @@ void RenderStacks(Stack[] stacks)
             if (k < 7)
             {
 
-                //DisplayText($"C:{stacks[k].stackedCards.Count} N:{stacks[k].numberOfCards}", stacks[k].positionX, stacks[k].positionY - 1);
-
                 DisplayText($"{k + 1}", stacks[k].positionX + 4, stacks[k].positionY - 2);
             }
             else
             {
-
-                //DisplayText($"C:{stacks[k].stackedCards.Count} N:{stacks[k].numberOfCards}", 0, 0);
 
                 DisplayText("[SPACE]", stacks[k].positionX + 11, stacks[k].positionY - 4);
             }
@@ -650,7 +612,6 @@ void RenderStacks(Stack[] stacks)
         }
     }
 
-    //DisplayText($"C:{stacks[12].stackedCards.Count} N:{stacks[12].numberOfCards}", 10, 0);
 
     if (stacks[12].numberOfCards > 0)
     {
@@ -666,7 +627,6 @@ void RenderStacks(Stack[] stacks)
     {
         i += 1;
 
-        //DisplayText($"C:{stacks[i].stackedCards.Count} N:{stacks[i].numberOfCards}", k, 0);
 
         if (stacks[i].stackedCards.Count > 0)
         {

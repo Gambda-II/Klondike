@@ -46,8 +46,6 @@ internal class Card
     {
         Console.BackgroundColor = ConsoleColor.DarkGreen;
 
-        //SetConsoleBackgroundColorTo(ConsoleColor.DarkGreen);
-
         return new string[]
         {
                 $"┌───────┐",
