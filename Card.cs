@@ -102,7 +102,7 @@ internal class Card
     {
         int originalLength = original.Length;
 
-        if (originalLength < 3)
+        if (originalLength < 2)
         {
             return original;
         }
